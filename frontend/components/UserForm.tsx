@@ -64,7 +64,10 @@ const UserForm = ({
       />
       <div className="text-xl font-semibold mb-3">Role</div>
       <div className="flex justify-between items-center mb-1">
-        <label htmlFor="REG" className={role === "REG" ? "" : "text-gray-400"}>
+        <label
+          htmlFor="REG"
+          className={`flex-1${role === "REG" ? "" : " text-gray-400"}`}
+        >
           Regular - Can&apos;t delete members
         </label>
         <input
@@ -76,8 +79,11 @@ const UserForm = ({
           onChange={onRoleChange}
         />
       </div>
-      <div className="flex justify-between items-center">
-        <label htmlFor="ADM" className={role === "ADM" ? "" : "text-gray-400"}>
+      <div className="flex items-center">
+        <label
+          htmlFor="ADM"
+          className={`flex-1${role === "ADM" ? "" : " text-gray-400"}`}
+        >
           Admin - Can delete members
         </label>
         <input
