@@ -1,8 +1,18 @@
-import UserForm from "@/components/UserForm";
+"use client";
+
+import { useState } from "react";
 import { X } from "lucide-react";
 import Link from "next/link";
+import UserForm from "@/components/UserForm";
+import { RoleType } from "@/util/type";
 
 const Add = () => {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+  const [role, setRole] = useState<RoleType>("REG");
+
   return (
     <div className="absolute w-full h-full inset-0 overflow-y-auto py-12 px-7 bg-white">
       <div className="w-full flex justify-end mb-3">
@@ -14,7 +24,13 @@ const Add = () => {
       <div className="text-gray-400 mb-12">Set email, location, and role.</div>
       <div className="border-t py-3">
         <form>
-          <UserForm />
+          <UserForm
+            useFirstname={[firstname, setFirstname]}
+            useLastname={[lastname, setLastname]}
+            useEmail={[email, setEmail]}
+            usePhonenumber={[phonenumber, setPhonenumber]}
+            useRole={[role, setRole]}
+          />
           <div className="flex justify-end mt-12">
             <button type="submit">
               <div className="px-7 py-3 bg-blue-500 text-white rounded-md">
