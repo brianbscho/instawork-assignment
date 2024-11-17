@@ -1,6 +1,7 @@
 from django.db import models
 
 class User(models.Model):
+    id = models.AutoField(primary_key=True)
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
