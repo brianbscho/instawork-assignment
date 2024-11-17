@@ -5,6 +5,7 @@ import User from "./User";
 const UserList = () => {
   const users = [
     {
+      id: 1,
       firstname: "Brian",
       lastname: "Cho",
       email: "brianbscho@gmail.com",
