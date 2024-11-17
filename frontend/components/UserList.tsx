@@ -4,12 +4,12 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import User from "./User";
 import { useEffect } from "react";
-import useUserState from "@/store/user";
+import useUserStore from "@/store/user";
 import api from "@/util/api";
 import { UserType } from "@/util/type";
 
 const UserList = () => {
-  const { users, setUsers } = useUserState();
+  const { users, setUsers } = useUserStore();
   useEffect(() => {
     const callUsersApi = async () => {
       const usersResponse = await api<UserType[]>("/users/");

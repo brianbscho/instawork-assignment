@@ -6,11 +6,11 @@ type UserState = {
   setUsers: (value: UserType[]) => void;
 };
 
-const useUserState = create<UserState>((set) => {
+const useUserStore = create<UserState>((set) => {
   return {
     users: null,
     setUsers: (users: UserType[]) => set({ users }),
   };
 });
 
-export default useUserState;
+export default useUserStore;
