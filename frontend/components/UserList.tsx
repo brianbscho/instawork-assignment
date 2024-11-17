@@ -1,18 +1,23 @@
+"use client";
+
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import User from "./User";
+import { useEffect, useState } from "react";
+import api from "@/util/api";
+import { UserType } from "@/util/type";
 
 const UserList = () => {
-  const users = [
-    {
-      id: 1,
-      firstname: "Brian",
-      lastname: "Cho",
-      email: "brianbscho@gmail.com",
-      phonenumber: "123-456-7890",
-      role: "ADM",
-    },
-  ];
+  const [users, setUser] = useState<UserType[]>([]);
+  useEffect(() => {
+    const callUsersApi = async () => {
+      const usersResponse = await api<UserType[]>("/users/");
+      if (usersResponse) {
+        setUser(usersResponse);
+      }
+    };
+    callUsersApi();
+  }, []);
 
   return (
     <div className="w-full ">
