@@ -28,14 +28,20 @@ const UserList = () => {
         </Link>
       </div>
       <div className="text-5xl font-bold mb-3">Team members</div>
-      <div className="text-gray-400 mb-12">{`You have ${
-        users.length
-      } team member${users.length > 1 ? "s" : ""}.`}</div>
-      <div className="border-t">
-        {users.map((user) => (
-          <User key={user.email} {...user} />
-        ))}
-      </div>
+      {!users ? (
+        <div className="py-12 text-center text-lg">Loading...</div>
+      ) : (
+        <>
+          <div className="text-gray-400 mb-12">{`You have ${
+            users.length
+          } team member${users.length > 1 ? "s" : ""}.`}</div>
+          <div className="border-t">
+            {users.map((user) => (
+              <User key={user.email} {...user} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };
