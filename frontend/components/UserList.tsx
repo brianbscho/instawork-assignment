@@ -37,7 +37,7 @@ const UserList = () => {
           } team member${users.length > 1 ? "s" : ""}.`}</div>
           <div className="border-t">
             {users.map((user) => (
-              <User key={user.email} {...user} />
+              <User key={user.id} {...user} />
             ))}
           </div>
         </>
