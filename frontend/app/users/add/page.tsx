@@ -39,15 +39,22 @@ const Add = () => {
         addUser(newUser);
         router.push("/users");
       }
-    } catch {
+    } catch (e) {
       alert("There was unknown error!");
+      throw e;
     }
   }, [firstname, lastname, email, phonenumber, role, addUser, router]);
 
+  const [isLoading, setIsLoading] = useState(false);
   const onSubmit: FormEventHandler<HTMLFormElement> = useCallback(
     async (e) => {
       e.preventDefault();
-      callUsersApi();
+      try {
+        setIsLoading(true);
+        await callUsersApi();
+      } finally {
+        setIsLoading(false);
+      }
     },
     [callUsersApi]
   );
@@ -69,9 +76,10 @@ const Add = () => {
             useEmail={[email, setEmail]}
             usePhonenumber={[phonenumber, setPhonenumber]}
             useRole={[role, setRole]}
+            disabled={isLoading}
           />
           <div className="flex justify-end mt-12">
-            <button type="submit">
+            <button type="submit" disabled={isLoading}>
               <div className="px-7 py-3 bg-blue-500 text-white rounded-md">
                 Save
               </div>
