@@ -26,12 +26,13 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
     getUserId();
   }, [params]);
 
-  const [users, editUser] = useUserStore(
-    useShallow((state) => [state.users, state.editUser])
+  const [isLoading, setIsLoading] = useState(false);
+  const [users, editUser, deleteUser] = useUserStore(
+    useShallow((state) => [state.users, state.editUser, state.deleteUser])
   );
   const [user, setUser] = useState<UserType>();
   useEffect(() => {
-    if (!users || !id) {
+    if (!users || !id || isLoading) {
       return;
     }
 
@@ -43,7 +44,7 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
     }
 
     setUser(users[index]);
-  }, [users, id]);
+  }, [users, id, isLoading]);
 
   const router = useRouter();
   const [isSettingUser, setIsSettingUser] = useState(true);
@@ -90,6 +91,37 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
     [callUserPatchApi]
   );
 
+  const callUserDeleteApi = useCallback(async () => {
+    if (!id) {
+      return;
+    }
+    await api(`/users/${id}/`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+    deleteUser(id);
+    router.push("/users");
+  }, [deleteUser, router, id]);
+  const onDelete = useCallback(
+    async (e: { preventDefault: () => void }) => {
+      e.preventDefault();
+      if (
+        !confirm(
+          `Do you want to delete ${firstname} ${lastname}? This action is irreversible.`
+        )
+      ) {
+        return;
+      }
+      try {
+        setIsLoading(true);
+        callUserDeleteApi();
+      } catch {
+        setIsLoading(false);
+      }
+    },
+    [firstname, lastname, callUserDeleteApi]
+  );
+
   return (
     <div className="absolute w-full h-full inset-0 overflow-y-auto py-12 px-7 bg-white">
       <div className="w-full flex justify-end mb-3">
@@ -116,7 +148,7 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
               useRole={[role, setRole]}
             />
             <div className="flex justify-between mt-12">
-              <button>
+              <button type="button" onClick={onDelete}>
                 <div className="px-7 py-3 text-red-500 rounded-md border border-gray-300">
                   Delete
                 </div>
