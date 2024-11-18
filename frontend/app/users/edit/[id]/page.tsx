@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import UserForm from "@/components/UserForm";
 import { RoleType, UserType } from "@/util/type";
 import useUserStore from "@/store/user";
+import api from "@/util/api";
+import { useShallow } from "zustand/shallow";
 
 const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
   const [firstname, setFirstname] = useState("");
@@ -15,26 +17,33 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
   const [phonenumber, setPhonenumber] = useState("");
   const [role, setRole] = useState<RoleType>("REG");
 
-  const users = useUserStore((state) => state.users);
+  const [id, setId] = useState("");
+  useEffect(() => {
+    const getUserId = async () => {
+      const paramId = (await params).id;
+      setId(paramId);
+    };
+    getUserId();
+  }, [params]);
+
+  const [users, editUser] = useUserStore(
+    useShallow((state) => [state.users, state.editUser])
+  );
   const [user, setUser] = useState<UserType>();
   useEffect(() => {
-    const getUser = async () => {
-      if (!users) {
-        return;
-      }
+    if (!users || !id) {
+      return;
+    }
 
-      const id = (await params).id;
-      const index = users.findIndex((u) => u.id === parseInt(id));
-      if (index < 0) {
-        alert("Invalid user id!");
-        router.push("/users");
-        return;
-      }
+    const index = users.findIndex((u) => u.id === parseInt(id));
+    if (index < 0) {
+      alert("Invalid user id!");
+      router.push("/users");
+      return;
+    }
 
-      setUser(users[index]);
-    };
-    getUser();
-  }, [users, params]);
+    setUser(users[index]);
+  }, [users, id]);
 
   const router = useRouter();
   const [isSettingUser, setIsSettingUser] = useState(true);
@@ -48,6 +57,35 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
     setRole(user.role);
     setIsSettingUser(false);
   }, [user]);
+
+  const callUserPatchApi = useCallback(async () => {
+    if (
+      firstname.length === 0 ||
+      lastname.length === 0 ||
+      email.length === 0 ||
+      phonenumber.length === 0
+    ) {
+      alert("Please fill all necessary fields");
+      return;
+    }
+
+    const updatedUser = await api<UserType>(`/users/${id}/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstname, lastname, email, phonenumber, role }),
+    });
+    if (updatedUser) {
+      editUser(updatedUser);
+      router.push("/users");
+    }
+  }, [firstname, lastname, email, phonenumber, role, editUser, router, id]);
+  const onSave = useCallback(
+    async (e: { preventDefault: () => void }) => {
+      e.preventDefault();
+      callUserPatchApi();
+    },
+    [callUserPatchApi]
+  );
 
   return (
     <div className="absolute w-full h-full inset-0 overflow-y-auto py-12 px-7 bg-white">
@@ -66,7 +104,7 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
         <></>
       ) : (
         <div className="border-t py-3">
-          <form>
+          <form onSubmit={onSave}>
             <UserForm
               useFirstname={[firstname, setFirstname]}
               useLastname={[lastname, setLastname]}
@@ -80,7 +118,7 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
                   Delete
                 </div>
               </button>
-              <button type="submit">
+              <button type="submit" onClick={onSave}>
                 <div className="px-7 py-3 bg-blue-500 text-white rounded-md">
                   Save
                 </div>

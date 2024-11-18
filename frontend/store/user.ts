@@ -5,6 +5,7 @@ type UserState = {
   users: UserType[] | null;
   setUsers: (value: UserType[]) => void;
   addUser: (value: UserType) => void;
+  editUser: (value: UserType) => void;
 };
 
 const useUserStore = create<UserState>((set) => {
@@ -13,6 +14,15 @@ const useUserStore = create<UserState>((set) => {
     setUsers: (users: UserType[]) => set({ users }),
     addUser: (user: UserType) =>
       set((state) => ({ users: [...(state.users ?? []), user] })),
+    editUser: (user: UserType) =>
+      set((state) => ({
+        users: state.users?.map((u) => {
+          if (u.id === user.id) {
+            return user;
+          }
+          return u;
+        }),
+      })),
   };
 });
 
