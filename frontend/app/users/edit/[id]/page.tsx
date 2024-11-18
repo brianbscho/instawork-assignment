@@ -17,11 +17,11 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
   const [phonenumber, setPhonenumber] = useState("");
   const [role, setRole] = useState<RoleType>("REG");
 
-  const [id, setId] = useState("");
+  const [id, setId] = useState<number>();
   useEffect(() => {
     const getUserId = async () => {
       const paramId = (await params).id;
-      setId(paramId);
+      setId(parseInt(paramId));
     };
     getUserId();
   }, [params]);
@@ -35,7 +35,7 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
       return;
     }
 
-    const index = users.findIndex((u) => u.id === parseInt(id));
+    const index = users.findIndex((u) => u.id === id);
     if (index < 0) {
       alert("Invalid user id!");
       router.push("/users");
@@ -59,6 +59,9 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
   }, [user]);
 
   const callUserPatchApi = useCallback(async () => {
+    if (!id) {
+      return;
+    }
     if (
       firstname.length === 0 ||
       lastname.length === 0 ||
