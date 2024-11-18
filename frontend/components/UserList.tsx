@@ -12,9 +12,13 @@ const UserList = () => {
   const { users, setUsers } = useUserStore();
   useEffect(() => {
     const callUsersApi = async () => {
-      const usersResponse = await api<UserType[]>("/users/");
-      if (usersResponse) {
-        setUsers(usersResponse);
+      try {
+        const usersResponse = await api<UserType[]>("/users/");
+        if (usersResponse) {
+          setUsers(usersResponse);
+        }
+      } catch {
+        alert("There was unknown error!");
       }
     };
     callUsersApi();

@@ -29,14 +29,18 @@ const Add = () => {
       return;
     }
 
-    const newUser = await api<UserType>("/users/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firstname, lastname, email, phonenumber, role }),
-    });
-    if (newUser) {
-      addUser(newUser);
-      router.push("/users");
+    try {
+      const newUser = await api<UserType>("/users/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstname, lastname, email, phonenumber, role }),
+      });
+      if (newUser) {
+        addUser(newUser);
+        router.push("/users");
+      }
+    } catch {
+      alert("There was unknown error!");
     }
   }, [firstname, lastname, email, phonenumber, role, addUser, router]);
 

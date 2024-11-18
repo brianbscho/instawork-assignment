@@ -73,14 +73,18 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
       return;
     }
 
-    const updatedUser = await api<UserType>(`/users/${id}/`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firstname, lastname, email, phonenumber, role }),
-    });
-    if (updatedUser) {
-      editUser(updatedUser);
-      router.push("/users");
+    try {
+      const updatedUser = await api<UserType>(`/users/${id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstname, lastname, email, phonenumber, role }),
+      });
+      if (updatedUser) {
+        editUser(updatedUser);
+        router.push("/users");
+      }
+    } catch {
+      alert("There was unknown error!");
     }
   }, [firstname, lastname, email, phonenumber, role, editUser, router, id]);
   const onSave = useCallback(
@@ -95,12 +99,16 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
     if (!id) {
       return;
     }
-    await api(`/users/${id}/`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
-    deleteUser(id);
-    router.push("/users");
+    try {
+      await api(`/users/${id}/`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      deleteUser(id);
+      router.push("/users");
+    } catch {
+      alert("There was unknown error!");
+    }
   }, [deleteUser, router, id]);
   const onDelete = useCallback(
     async (e: { preventDefault: () => void }) => {
