@@ -43,7 +43,7 @@ venv\Scripts\activate
 Once the virtual environment is activated, install the required Python packages:
 
 ```
-pip install Django djangorestframework django-cors-headers
+pip install Django djangorestframework django-cors-headers python-decouple
 ```
 
 If needed, refer to the official documentation of these libraries for more details:
@@ -51,6 +51,7 @@ If needed, refer to the official documentation of these libraries for more detai
 - [Django](https://www.djangoproject.com/)
 - [Django REST Framework](https://www.django-rest-framework.org/)
 - [Django CORS Headers](https://pypi.org/project/django-cors-headers/)
+- [Python Decouple](https://pypi.org/project/python-decouple/)
 
 #### 3. Apply Database Migrations
 
@@ -61,7 +62,15 @@ cd server
 python manage.py migrate
 ```
 
-#### 4. Run the Server
+#### 4. Set Environment Variables
+
+Create a `.env` file in the root of the `server` directory, same level with `manage.py`, and add the following environment variable, with your choice of secure secret key:
+
+```
+SECRET_KEY=your-secret-key
+```
+
+#### 5. Run the Server
 
 Start the development server:
 
