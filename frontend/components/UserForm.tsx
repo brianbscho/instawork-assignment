@@ -9,6 +9,7 @@ type UserFormProps = {
   useEmail: [string, (value: string) => void];
   usePhonenumber: [string, (value: string) => void];
   useRole: [RoleType, (value: RoleType) => void];
+  disabled?: boolean;
 };
 
 const UserForm = ({
@@ -17,6 +18,7 @@ const UserForm = ({
   useEmail,
   usePhonenumber,
   useRole,
+  disabled,
 }: UserFormProps) => {
   const [firstname, setFirstname] = useFirstname;
   const [lastname, setLastname] = useLastname;
@@ -40,6 +42,7 @@ const UserForm = ({
         className="w-full py-2 px-3 border focus-visible:outline-none border-gray-300 focus:border-gray-900 rounded-md mb-2"
         value={firstname}
         onChange={(e) => setFirstname(e.currentTarget.value)}
+        disabled={disabled}
       />
       <input
         type="text"
@@ -47,6 +50,7 @@ const UserForm = ({
         className="w-full py-2 px-3 border focus-visible:outline-none border-gray-300 focus:border-gray-900 rounded-md mb-2"
         value={lastname}
         onChange={(e) => setLastname(e.currentTarget.value)}
+        disabled={disabled}
       />
       <input
         type="text"
@@ -54,6 +58,7 @@ const UserForm = ({
         className="w-full py-2 px-3 border focus-visible:outline-none border-gray-300 focus:border-gray-900 rounded-md mb-2"
         value={email}
         onChange={(e) => setEmail(e.currentTarget.value)}
+        disabled={disabled}
       />
       <input
         type="text"
@@ -61,6 +66,8 @@ const UserForm = ({
         className="w-full py-2 px-3 border focus-visible:outline-none border-gray-300 focus:border-gray-900 rounded-md mb-12"
         value={phonenumber}
         onChange={(e) => setPhonenumber(e.currentTarget.value)}
+        disabled={disabled}
+        maxLength={12}
       />
       <div className="text-xl font-semibold mb-3">Role</div>
       <div className="flex justify-between items-center mb-1">
@@ -77,6 +84,7 @@ const UserForm = ({
           value="REG"
           checked={role === "REG"}
           onChange={onRoleChange}
+          disabled={disabled}
         />
       </div>
       <div className="flex items-center">
@@ -93,6 +101,7 @@ const UserForm = ({
           value="ADM"
           checked={role === "ADM"}
           onChange={onRoleChange}
+          disabled={disabled}
         />
       </div>
     </>

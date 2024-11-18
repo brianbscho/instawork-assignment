@@ -3,10 +3,10 @@ import { create } from "zustand";
 
 type UserState = {
   users: UserType[] | null;
-  setUsers: (value: UserType[]) => void;
-  addUser: (value: UserType) => void;
+  setUsers: (users: UserType[]) => void;
+  addUser: (user: UserType) => void;
   deleteUser: (id: number) => void;
-  editUser: (value: UserType) => void;
+  editUser: (user: UserType) => void;
 };
 
 const useUserStore = create<UserState>((set) => {
@@ -14,7 +14,7 @@ const useUserStore = create<UserState>((set) => {
     users: null,
     setUsers: (users: UserType[]) => set({ users }),
     addUser: (user: UserType) =>
-      set((state) => ({ users: [...(state.users ?? []), user] })),
+      set((state) => ({ users: state.users?.concat(user) })),
     deleteUser: (id: number) =>
       set((state) => ({ users: state.users?.filter((u) => u.id !== id) })),
     editUser: (user: UserType) =>

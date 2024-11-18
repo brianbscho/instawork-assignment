@@ -73,20 +73,30 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
       return;
     }
 
-    const updatedUser = await api<UserType>(`/users/${id}/`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firstname, lastname, email, phonenumber, role }),
-    });
-    if (updatedUser) {
-      editUser(updatedUser);
-      router.push("/users");
+    try {
+      const updatedUser = await api<UserType>(`/users/${id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstname, lastname, email, phonenumber, role }),
+      });
+      if (updatedUser) {
+        editUser(updatedUser);
+        router.push("/users");
+      }
+    } catch (e) {
+      alert("There was unknown error!");
+      throw e;
     }
   }, [firstname, lastname, email, phonenumber, role, editUser, router, id]);
   const onSave = useCallback(
     async (e: { preventDefault: () => void }) => {
       e.preventDefault();
-      callUserPatchApi();
+      try {
+        setIsLoading(true);
+        await callUserPatchApi();
+      } finally {
+        setIsLoading(false);
+      }
     },
     [callUserPatchApi]
   );
@@ -95,12 +105,17 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
     if (!id) {
       return;
     }
-    await api(`/users/${id}/`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
-    deleteUser(id);
-    router.push("/users");
+    try {
+      await api(`/users/${id}/`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      deleteUser(id);
+      router.push("/users");
+    } catch (e) {
+      alert("There was unknown error!");
+      throw e;
+    }
   }, [deleteUser, router, id]);
   const onDelete = useCallback(
     async (e: { preventDefault: () => void }) => {
@@ -114,8 +129,8 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
       }
       try {
         setIsLoading(true);
-        callUserDeleteApi();
-      } catch {
+        await callUserDeleteApi();
+      } finally {
         setIsLoading(false);
       }
     },
@@ -146,14 +161,15 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
               useEmail={[email, setEmail]}
               usePhonenumber={[phonenumber, setPhonenumber]}
               useRole={[role, setRole]}
+              disabled={isLoading}
             />
             <div className="flex justify-between mt-12">
-              <button type="button" onClick={onDelete}>
+              <button type="button" onClick={onDelete} disabled={isLoading}>
                 <div className="px-7 py-3 text-red-500 rounded-md border border-gray-300">
                   Delete
                 </div>
               </button>
-              <button type="submit" onClick={onSave}>
+              <button type="submit" onClick={onSave} disabled={isLoading}>
                 <div className="px-7 py-3 bg-blue-500 text-white rounded-md">
                   Save
                 </div>

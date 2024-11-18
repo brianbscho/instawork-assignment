@@ -12,9 +12,13 @@ const UserList = () => {
   const { users, setUsers } = useUserStore();
   useEffect(() => {
     const callUsersApi = async () => {
-      const usersResponse = await api<UserType[]>("/users/");
-      if (usersResponse) {
-        setUsers(usersResponse);
+      try {
+        const usersResponse = await api<UserType[]>("/users/");
+        if (usersResponse) {
+          setUsers(usersResponse);
+        }
+      } catch {
+        alert("There was unknown error!");
       }
     };
     callUsersApi();
@@ -37,7 +41,7 @@ const UserList = () => {
           } team member${users.length > 1 ? "s" : ""}.`}</div>
           <div className="border-t">
             {users.map((user) => (
-              <User key={user.email} {...user} />
+              <User key={user.id} {...user} />
             ))}
           </div>
         </>
