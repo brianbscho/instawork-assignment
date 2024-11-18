@@ -53,21 +53,21 @@ If needed, refer to the official documentation of these libraries for more detai
 - [Django CORS Headers](https://pypi.org/project/django-cors-headers/)
 - [Python Decouple](https://pypi.org/project/python-decouple/)
 
-#### 3. Apply Database Migrations
+#### 3. Set Environment Variables
+
+Create a `.env` file in the root of the `server` directory, same level with `manage.py`, and add the following environment variable, with your choice of secure secret key:
+
+```
+SECRET_KEY=your-secret-key
+```
+
+#### 4. Apply Database Migrations
 
 Prepare the database by applying migrations:
 
 ```
 cd server
 python manage.py migrate
-```
-
-#### 4. Set Environment Variables
-
-Create a `.env` file in the root of the `server` directory, same level with `manage.py`, and add the following environment variable, with your choice of secure secret key:
-
-```
-SECRET_KEY=your-secret-key
 ```
 
 #### 5. Run the Server
