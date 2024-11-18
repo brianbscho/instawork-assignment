@@ -5,12 +5,15 @@ export default async function api<T>(endpoint: string, init?: RequestInit) {
       init
     );
     if (response?.ok) {
+      if (response.status === 204) {
+        return;
+      }
       return response.json() as T;
     } else {
       alert("Error occurred!");
     }
   } catch (e) {
     console.log(e);
-    return;
+    throw e;
   }
 }
