@@ -8,6 +8,7 @@ import UserForm from "@/components/UserForm";
 import { RoleType, UserType } from "@/util/type";
 import useUserStore from "@/store/user";
 import api from "@/util/api";
+import { isValidEmail, isValidPhonenumber } from "@/util/string";
 import { useShallow } from "zustand/shallow";
 
 const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
@@ -70,6 +71,12 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
       phonenumber.length === 0
     ) {
       alert("Please fill all necessary fields");
+      return;
+    } else if (!isValidEmail(email)) {
+      alert("Please enter valid email address");
+      return;
+    } else if (!isValidPhonenumber(phonenumber)) {
+      alert("Please enter valid phone number, format of ###-###-####");
       return;
     }
 

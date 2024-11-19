@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import UserForm from "@/components/UserForm";
 import api from "@/util/api";
 import { RoleType, UserType } from "@/util/type";
+import { isValidEmail, isValidPhonenumber } from "@/util/string";
 import useUserStore from "@/store/user";
 
 const Add = () => {
@@ -26,6 +27,12 @@ const Add = () => {
       phonenumber.length === 0
     ) {
       alert("Please fill all necessary fields");
+      return;
+    } else if (!isValidEmail(email)) {
+      alert("Please enter valid email address");
+      return;
+    } else if (!isValidPhonenumber(phonenumber)) {
+      alert("Please enter valid phone number, format of ###-###-####");
       return;
     }
 
