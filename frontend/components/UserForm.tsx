@@ -62,7 +62,7 @@ const UserForm = ({
       />
       <input
         type="text"
-        placeholder="Phone number"
+        placeholder="Phone number (###-###-####)"
         className="w-full py-2 px-3 border focus-visible:outline-none border-gray-300 focus:border-gray-900 rounded-md mb-12"
         value={phonenumber}
         onChange={(e) => setPhonenumber(e.currentTarget.value)}
