@@ -32,8 +32,9 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
     useShallow((state) => [state.users, state.editUser, state.deleteUser])
   );
   const [user, setUser] = useState<UserType>();
+  const [isUserInitiated, setIsUserInitiated] = useState(false);
   useEffect(() => {
-    if (!users || !id || isLoading) {
+    if (!users || !id || isUserInitiated) {
       return;
     }
 
@@ -45,10 +46,9 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
     }
 
     setUser(users[index]);
-  }, [users, id, isLoading]);
+  }, [users, id, isUserInitiated]);
 
   const router = useRouter();
-  const [isSettingUser, setIsSettingUser] = useState(true);
   useEffect(() => {
     if (!user) return;
 
@@ -57,7 +57,7 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
     setEmail(user.email);
     setPhonenumber(user.phonenumber);
     setRole(user.role);
-    setIsSettingUser(false);
+    setIsUserInitiated(true);
   }, [user]);
 
   const callUserPatchApi = useCallback(async () => {
@@ -157,7 +157,7 @@ const Edit = ({ params }: { params: Promise<{ id: string }> }) => {
       </div>
       {!users ? (
         <div className="py-12 text-center text-lg">Loading...</div>
-      ) : !user || isSettingUser ? (
+      ) : !user || !isUserInitiated ? (
         <></>
       ) : (
         <div className="border-t py-3">
