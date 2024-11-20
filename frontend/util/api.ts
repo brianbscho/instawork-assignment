@@ -10,7 +10,12 @@ export default async function api<T>(endpoint: string, init?: RequestInit) {
       }
       return response.json() as T;
     } else {
-      alert("Error occurred!");
+      const error = await response.json();
+      if ("error" in error) {
+        alert(`Please fix following: ${error.error}`);
+      } else {
+        alert("Unknown error occurred");
+      }
     }
   } catch (e) {
     console.log(e);
